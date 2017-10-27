@@ -14,6 +14,80 @@
 
     },
     "Resources": {
+        "DHCPOptions": {
+            "Type": "AWS::EC2::DHCPOptions",
+            "Properties": {
+                "DomainName": "ap-southeast-2.compute.internal",
+                "DomainNameServers": ["AmazonProvidedDNS"]
+            }
+        },
+        
+        "VPC": {
+          "Type": "AWS::EC2::VPC",
+          "Properties": {
+            "CidrBlock": "10.0.0.0/16",
+            "EnableDnsHostnames":"True",
+            "EnableDnsSupport":"True"
+          }
+        },
+
+        
+        "subnetDMZ": {
+          "Type": "AWS::EC2::Subnet",
+          "Properties": {
+            "AvailabilityZone": "-",
+            "VpcId":                 
+                { "Ref": "VPC" 
+               
+            },
+            "CidrBlock": "10.0.10.0/24"
+          }
+        },
+
+        "subnetProd": {
+            "Type": "AWS::EC2::Subnet",
+            "Properties": {
+              "AvailabilityZone": "-",
+              "VpcId":                 
+                  { "Ref": "VPC" 
+                 
+              },
+              "CidrBlock": "10.0.20.0/24"
+            }
+          },
+
+          "subnetAccess": {
+            "Type": "AWS::EC2::Subnet",
+            "Properties": {
+              "AvailabilityZone": "-",
+              "VpcId":                 
+                  { "Ref": "VPC" 
+                 
+              },
+              "CidrBlock": "10.0.30.0/24"
+            }
+          },
+
+          
+          "igw": {
+            "Type": "AWS::EC2::InternetGateway",
+            "Properties": {
+            }
+          },
+          "AttachGateway": {
+            "Type": "AWS::EC2::VPCGatewayAttachment",
+            "Properties": {
+              "VpcId": {
+               "Ref": "VPC" 
+              },
+              "InternetGatewayId": { "Ref": "igw" }
+            }
+          }
+          
+  
+  
+        
+        
 
     },
     "Outputs": {
