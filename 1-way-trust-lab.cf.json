@@ -108,7 +108,6 @@
                 "Icmp": {
                     "Code": "-1",
                     "Type": "-1"
-
                 }
             }
         },
@@ -131,45 +130,17 @@
             }
         },
 
-        "ACLAllowSubnet10InsideVPC": {
-            "Type": "AWS::EC2::NetworkAclEntry",
+        "AssociateACLtoAccessSubnet": {
+            "Type": "AWS::EC2::SubnetNetworkAclAssociation",
             "Properties": {
+                "SubnetId": {
+                    "Ref": "subnetAccess"
+                },
                 "NetworkAclId": {
                     "Ref": "DefaultNetworkACL"
-                },
-                "RuleNumber": "110",
-                "Protocol": "-1",
-                "RuleAction": "Allow",
-                "Egress": "false",
-                "CidrBlock": "10.0.10.0/24"
+                }
             }
         },
-        "ACLAllowSubnet20InsideVPC": {
-            "Type": "AWS::EC2::NetworkAclEntry",
-            "Properties": {
-                "NetworkAclId": {
-                    "Ref": "DefaultNetworkACL"
-                },
-                "RuleNumber": "120",
-                "Protocol": "-1",
-                "RuleAction": "Allow",
-                "Egress": "false",
-                "CidrBlock": "10.0.20.0/24"
-            }
-        },
-        "ACLAllowSubnet30InsideVPC": {
-            "Type": "AWS::EC2::NetworkAclEntry",
-            "Properties": {
-                "NetworkAclId": {
-                    "Ref": "DefaultNetworkACL"
-                },
-                "RuleNumber": "130",
-                "Protocol": "-1",
-                "RuleAction": "Allow",
-                "Egress": "false",
-                "CidrBlock": "10.0.30.0/24"
-            }
-        }
 
 
     },
