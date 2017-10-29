@@ -35,7 +35,13 @@
         "subnetDMZ": {
             "Type": "AWS::EC2::Subnet",
             "Properties": {
-                "AvailabilityZone": "-",
+                "AvailabilityZone": {
+                    "Fn::Select": ["0", {
+                        "Fn::GetAZs": {
+                            "Ref": "AWS::Region"
+                        }
+                    }]
+                },
                 "VpcId": {
                     "Ref": "VPC"
 
@@ -47,7 +53,13 @@
         "subnetProd": {
             "Type": "AWS::EC2::Subnet",
             "Properties": {
-                "AvailabilityZone": "-",
+                "AvailabilityZone": {
+                    "Fn::Select": ["1", {
+                        "Fn::GetAZs": {
+                            "Ref": "AWS::Region"
+                        }
+                    }]
+                },
                 "VpcId": {
                     "Ref": "VPC"
 
@@ -59,7 +71,13 @@
         "subnetAccess": {
             "Type": "AWS::EC2::Subnet",
             "Properties": {
-                "AvailabilityZone": "-",
+                "AvailabilityZone": {
+                    "Fn::Select": ["2", {
+                        "Fn::GetAZs": {
+                            "Ref": "AWS::Region"
+                        }
+                    }]
+                },
                 "VpcId": {
                     "Ref": "VPC"
 
