@@ -177,7 +177,7 @@
         "VpcId": {
             "Description": "VPC",
             "Value": {
-             "Ref": "VPC" 
+                "Ref": "VPC"
             }
         }
 
