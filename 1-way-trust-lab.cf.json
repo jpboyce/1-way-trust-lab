@@ -142,6 +142,19 @@
             }
         },
 
+        "AssociateDHCPOptionsToVPC": {
+            "Type": "AWS::EC2::VPCDHCPOptionsAssociation",
+            "Properties": {
+                "VpcId": {
+                    "Ref": "VPC"
+                },
+                "DhcpOptionsId": {
+                    "Ref": "DHCPOptions"
+                }
+            }
+        },
+        
+
 
     },
     "Outputs": {
