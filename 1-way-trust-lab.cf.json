@@ -4,33 +4,78 @@
   "Metadata": {},
   "Parameters": {
     "ProdDCIP": {
-        "Type": "String",
-        "Default": "10.0.20.10",
-        "Description": "IP Address of the Prod Domain Controller"
+      "Type": "String",
+      "Default": "10.0.20.10",
+      "Description": "IP Address of the Prod Domain Controller"
     },
     "DMZDCIP": {
-        "Type": "String",
-        "Default": "10.0.10.10",
-        "Description": "IP Address of the DMZ Domain Controller"
+      "Type": "String",
+      "Default": "10.0.10.10",
+      "Description": "IP Address of the DMZ Domain Controller"
     },
     "AccessRDPIP": {
-        "Type": "String",
-        "Default": "10.0.30.11",
-        "Description": "IP Address of the Access RDP server"
+      "Type": "String",
+      "Default": "10.0.30.11",
+      "Description": "IP Address of the Access RDP server"
     },
     "DMZRHELIP": {
+      "Type": "String",
+      "Default": "10.0.10.100",
+      "Description": "IP Address of the DMZ RHEL server"
+    },
+    "VPCCDIR": {
+      "Type": "String",
+      "Default": "10.0.0.0/16",
+      "Description": "CIDR for VPC",
+      "AllowedPattern": "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\\/(1[6-9]|2[0-8]))$"
+    },
+    "InstanceTypeforDC": {
         "Type": "String",
-        "Default": "10.0.10.100",
-        "Description": "IP Address of the DMZ RHEL server"
-    }
+        "Default": "t2.micro",
+        "AllowedValues": [
+            "t2.nano",
+            "t2.micro",
+            "t2.small",
+            "t2.medium",
+            "t2.large"
+        ]
+    },
+    "InstanceTypeforRDP": {
+        "Type": "String",
+        "Default": "t2.large",
+        "AllowedValues": [
+            "t2.nano",
+            "t2.micro",
+            "t2.small",
+            "t2.medium",
+            "t2.large",
+            "t2.xlarge",
+            "m4.large",
+            "m4.xlarge"
+        ]
 },
+    "InstanceTypeforRHEL": {
+        "Type": "String",
+        "Default": "t2.micro",
+        "AllowedValues": [
+            "t2.nano",
+            "t2.micro",
+            "t2.small",
+            "t2.medium",
+            "t2.large"
+        ]
+    },
+
+
+
+  },
   "Mappings": {
     "AWSRegion2AMI": {
-        "ap-southeast-2": {
-            "Windows_Server-2012-RTM-English-64Bit-Base": "ami-8f17f5ed",
-            "Windows_Server-2008-R2_SP1-English-64Bit-Base": "ami-9f0ceefd",
-            "RHEL-7.3": "ami-9a3322f9"
-        }
+      "ap-southeast-2": {
+        "Windows_Server-2012-RTM-English-64Bit-Base": "ami-8f17f5ed",
+        "Windows_Server-2008-R2_SP1-English-64Bit-Base": "ami-9f0ceefd",
+        "RHEL-7.3": "ami-9a3322f9"
+      }
     }
   },
   "Conditions": {},
@@ -219,96 +264,92 @@
     },
 
     "ProdDC": {
-        "Type": "AWS::EC2::Instance",
-        "Properties": {
-          "KeyName": "-",
-          "DisableApiTermination": "False",
-          "ImageId": {
-            "Fn::FindInMap": [
-              "AWSRegion2AMI",
-              {
-                "Ref": "AWS::Region"
-              },
-              "Windows_Server-2008-R2_SP1-English-64Bit-Base"
-            ]
-          },
-          "InstanceType": { "Ref": "DC" },
-          "Monitoring": "false",
-          "SecurityGroupIds": [],
-          "PrivateIpAddress": { "Ref": "ProdDCIP" },
-          "SubnetId": { "Ref": "subnetProd" }
-        }
-      },
-  
-      "DMZDC": {
-        "Type": "AWS::EC2::Instance",
-        "Properties": {
-          "KeyName": "-",
-          "DisableApiTermination": "False",
-          "ImageId": {
-            "Fn::FindInMap": [
-              "AWSRegion2AMI",
-              {
-                "Ref": "AWS::Region"
-              },
-              "Windows_Server-2012-RTM-English-64Bit-Base"
-            ]
-          },
-          "InstanceType": { "Ref": "DC" },
-          "Monitoring": "false",
-          "SecurityGroupIds": [],
-          "PrivateIpAddress": { "Ref": "DMZDCIP" },
-          "SubnetId": { "Ref": "subnetDMZ" }
-        }
-      },
-  
-      "DMZRHEL": {
-        "Type": "AWS::EC2::Instance",
-        "Properties": {
-          "KeyName": "-",
-          "DisableApiTermination": "False",
-          "ImageId": {
-            "Fn::FindInMap": [
-              "AWSRegion2AMI",
-              {
-                "Ref": "AWS::Region"
-              },
-              "RHEL-7.3"
-            ]
-          },
-          "InstanceType": { "Ref": "RHEL" },
-          "Monitoring": "false",
-          "SecurityGroupIds": [],
-          "PrivateIpAddress": { "Ref": "DMZRHELIP" },
-          "SubnetId": { "Ref": "subnetDMZ" }
-        }
-      },
-  
-      "AccessRDP": {
-        "Type": "AWS::EC2::Instance",
-        "Properties": {
-          "KeyName": "-",
-          "DisableApiTermination": "False",
-          "ImageId": {
-            "Fn::FindInMap": [
-              "AWSRegion2AMI",
-              {
-                "Ref": "AWS::Region"
-              },
-              "Windows_Server-2012-RTM-English-64Bit-Base"
-            ]
-          },
-          "InstanceType": { "Ref": "RDP" },
-          "Monitoring": "false",
-          "SecurityGroupIds": [],
-          "PrivateIpAddress": { "Ref": "AccessRDPIP" },
-          "SubnetId": { "Ref": "subnetAccess" }
-        }
+      "Type": "AWS::EC2::Instance",
+      "Properties": {
+        "KeyName": "-",
+        "DisableApiTermination": "False",
+        "ImageId": {
+          "Fn::FindInMap": [
+            "AWSRegion2AMI",
+            {
+              "Ref": "AWS::Region"
+            },
+            "Windows_Server-2008-R2_SP1-English-64Bit-Base"
+          ]
+        },
+        "InstanceType": { "Ref": "DC" },
+        "Monitoring": "false",
+        "SecurityGroupIds": [],
+        "PrivateIpAddress": { "Ref": "ProdDCIP" },
+        "SubnetId": { "Ref": "subnetProd" }
       }
-  
-        
+    },
 
+    "DMZDC": {
+      "Type": "AWS::EC2::Instance",
+      "Properties": {
+        "KeyName": "-",
+        "DisableApiTermination": "False",
+        "ImageId": {
+          "Fn::FindInMap": [
+            "AWSRegion2AMI",
+            {
+              "Ref": "AWS::Region"
+            },
+            "Windows_Server-2012-RTM-English-64Bit-Base"
+          ]
+        },
+        "InstanceType": { "Ref": "DC" },
+        "Monitoring": "false",
+        "SecurityGroupIds": [],
+        "PrivateIpAddress": { "Ref": "DMZDCIP" },
+        "SubnetId": { "Ref": "subnetDMZ" }
+      }
+    },
 
+    "DMZRHEL": {
+      "Type": "AWS::EC2::Instance",
+      "Properties": {
+        "KeyName": "-",
+        "DisableApiTermination": "False",
+        "ImageId": {
+          "Fn::FindInMap": [
+            "AWSRegion2AMI",
+            {
+              "Ref": "AWS::Region"
+            },
+            "RHEL-7.3"
+          ]
+        },
+        "InstanceType": { "Ref": "RHEL" },
+        "Monitoring": "false",
+        "SecurityGroupIds": [],
+        "PrivateIpAddress": { "Ref": "DMZRHELIP" },
+        "SubnetId": { "Ref": "subnetDMZ" }
+      }
+    },
+
+    "AccessRDP": {
+      "Type": "AWS::EC2::Instance",
+      "Properties": {
+        "KeyName": "-",
+        "DisableApiTermination": "False",
+        "ImageId": {
+          "Fn::FindInMap": [
+            "AWSRegion2AMI",
+            {
+              "Ref": "AWS::Region"
+            },
+            "Windows_Server-2012-RTM-English-64Bit-Base"
+          ]
+        },
+        "InstanceType": { "Ref": "RDP" },
+        "Monitoring": "false",
+        "SecurityGroupIds": [],
+        "PrivateIpAddress": { "Ref": "AccessRDPIP" },
+        "SubnetId": { "Ref": "subnetAccess" }
+      }
+    }
   },
   "Outputs": {
     "VpcId": {
